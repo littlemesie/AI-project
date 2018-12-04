@@ -102,5 +102,3 @@ x_train_noisy, x_test_noisy = add_noise(x_train,x_test)
 decoded_imgs = remove_noisy(x_test_noisy)
 plot2(x_test_noisy,decoded_imgs)
 
-
-
