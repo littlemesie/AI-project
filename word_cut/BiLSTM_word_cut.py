@@ -7,6 +7,7 @@ import re
 # 读取字典
 vocab = open('data/msr/msr_training_words.utf8').read().rstrip('\n').split('\n')
 vocab = list(''.join(vocab))
+print(vocab)
 stat = {}
 for v in vocab:
     stat[v] = stat.get(v, 0) + 1
