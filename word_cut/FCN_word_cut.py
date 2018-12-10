@@ -22,6 +22,7 @@ char2id = {c: i + 1 for i, c in enumerate(vocab)}
 # key-value 交换
 id2char = {i + 1: c for i, c in enumerate(vocab)}
 tags = {'s': [1, 0, 0, 0], 'b': [0, 1, 0, 0], 'm': [0, 0, 1, 0], 'e': [0, 0, 0, 1]}
+print(tags)
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
@@ -73,8 +74,11 @@ def cut_words(data):
     results = ''
     for i in range(len(Xs)):
         X_d = np.array([Xs[i]])
+        print(X_d)
         Y_d = sess.run(Y_pred, feed_dict={X_input: X_d})
+        print(Y_d)
         nodes = [dict(zip(['s', 'b', 'm', 'e'], d)) for d in Y_d[0]]
+
         ts = viterbi(nodes)
         for x in range(len(sens[i])):
             if ts[x] in ['s', 'e']:
@@ -85,7 +89,7 @@ def cut_words(data):
     return results[:-1]
 
 
-print(cut_words('中国共产党第十九次全国代表大会，是在全面建成小康社会决胜阶段、中国特色社会主义进入新时代的关键时期召开的一次十分重要的大会。'))
-print(cut_words('把这本书推荐给，具有一定编程基础，希望了解数据分析、人工智能等知识领域，进一步提升个人技术能力的社会各界人士。'))
-print(cut_words('结婚的和尚未结婚的。'))
+# print(cut_words('中国共产党第十九次全国代表大会，是在全面建成小康社会决胜阶段、中国特色社会主义进入新时代的关键时期召开的一次十分重要的大会。'))
+# print(cut_words('把这本书推荐给，具有一定编程基础，希望了解数据分析、人工智能等知识领域，进一步提升个人技术能力的社会各界人士。'))
+# print(cut_words('结婚的和尚未结婚的。'))
 print(cut_words('我来到北京清华大学'))
