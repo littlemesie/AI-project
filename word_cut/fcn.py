@@ -25,19 +25,32 @@ print(len(vocab))
 char2id = {c: i + 1 for i, c in enumerate(vocab)}
 id2char = {i + 1: c for i, c in enumerate(vocab)}
 tags = {'s': [1, 0, 0, 0], 'b': [0, 1, 0, 0], 'm': [0, 0, 1, 0], 'e': [0, 0, 0, 1]}
-
 batch_size = 64
 
+def get_dic():
+    # 读取字典
+    vocab = open('data/msr/msr_training_words.utf8').read().rstrip('\n').split('\n')
+    vocab = list(''.join(vocab))
+    stat = {}
+    for v in vocab:
+        stat[v] = stat.get(v, 0) + 1
+    stat = sorted(stat.items(), key=lambda x: x[1], reverse=True)
+    vocab = [s[0] for s in stat]
+    # 5167 个字
+    print(len(vocab))
+    # 映射
+    char2id = {c: i + 1 for i, c in enumerate(vocab)}
+    id2char = {i + 1: c for i, c in enumerate(vocab)}
+
+    return char2id, id2char
 
 def load_data(path):
     data = open(path).read().rstrip('\n')
     # 按标点符号和换行符分隔
     data = re.split('[，。！？、\n]', data)
-
     # 准备数据
     X_data = []
     Y_data = []
-
     for sentence in data:
         sentence = sentence.split(' ')
         X = []
@@ -145,3 +158,7 @@ for e in range(epochs):
         max_test_acc = mean_test_acc
         print('Saving Model......')
         saver.save(sess, './msr_fcn/msr_fcn')
+#
+# if __name__ == '__main__':
+#
+#     char2id, id2char = get_dic()
