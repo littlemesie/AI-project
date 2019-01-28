@@ -12,7 +12,7 @@ import re
 import time
 
 # 读取字典
-vocab = open('data/msr/msr_training_words.utf8').read().rstrip('\n').split('\n')
+vocab = open('data/msr/msr_training_words.utf8',encoding='utf-8').read().rstrip('\n').split('\n')
 vocab = list(''.join(vocab))
 stat = {}
 for v in vocab:
@@ -24,6 +24,10 @@ print(len(vocab))
 # 映射
 char2id = {c: i + 1 for i, c in enumerate(vocab)}
 id2char = {i + 1: c for i, c in enumerate(vocab)}
+# s 代表一个字
+# b 代表2个字以上的第一个
+# m 代表2个字以上中间的字
+# e 代表2个字以上的最后一个
 tags = {'s': [1, 0, 0, 0], 'b': [0, 1, 0, 0], 'm': [0, 0, 1, 0], 'e': [0, 0, 0, 1]}
 batch_size = 64
 
@@ -45,7 +49,7 @@ def get_dic():
     return char2id, id2char
 
 def load_data(path):
-    data = open(path).read().rstrip('\n')
+    data = open(path, encoding='utf-8').read().rstrip('\n')
     # 按标点符号和换行符分隔
     data = re.split('[，。！？、\n]', data)
     # 准备数据
@@ -101,6 +105,7 @@ def load_data(path):
 
         X_batch.append(X_data[i])
         Y_batch.append(Y_data[i])
+    print(X_batch)
 
 embedding_size = 128
 
@@ -125,7 +130,7 @@ cross_entropy = tf.reduce_mean(-tf.reduce_sum(Y_true * tf.log(Y_pred + 1e-20), a
 optimizer = tf.train.AdamOptimizer().minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(Y_pred, 2), tf.argmax(Y_true, 2))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
+# 模型保存
 saver = tf.train.Saver()
 max_test_acc = -np.inf
 
@@ -158,7 +163,4 @@ for e in range(epochs):
         max_test_acc = mean_test_acc
         print('Saving Model......')
         saver.save(sess, './msr_fcn/msr_fcn')
-#
-# if __name__ == '__main__':
-#
-#     char2id, id2char = get_dic()
+
