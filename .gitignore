@@ -105,3 +105,4 @@ venv.bak/
 .idea
 ai/
 data/
+.DS_Store
